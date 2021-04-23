@@ -8,6 +8,9 @@ import lombok.*;
  
 @Entity  // This marks Customer class as an entity
 @Getter @Setter // This makes all fields below publicly accessible
+@View(name="Simple", // This view is used only when “Simple” is specified
+members="number, name" // Shows only number and name in the same line
+)
 public class Customer {
  
     @Id  // The number property is the key property. Keys are required by default
@@ -18,4 +21,7 @@ public class Customer {
     @Required  // A validation error will be shown if the name property is left empty
     String name;
  
+    @Embedded @NoFrame // This is the way to reference an embeddable class
+    Address address; // A regular Java reference
+    
 }
