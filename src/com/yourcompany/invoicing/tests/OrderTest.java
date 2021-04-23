@@ -23,4 +23,27 @@ public class OrderTest extends CommercialDocumentTest {
         assertValue("invoice.number", number); // the invoice has been selected
     }
     
+    public void testDeliveryDays() throws Exception {
+        login("admin", "admin");
+        assertListNotEmpty(); 
+        execute("List.viewDetail", "row=0"); 
+    	
+        setValue("date", "6/5/20");
+        assertValue("estimatedDeliveryDays", "1");
+        setValue("date", "6/6/20");
+        assertValue("estimatedDeliveryDays", "3");
+        setValue("date", "6/7/20");
+        assertValue("estimatedDeliveryDays", "2");
+        execute("CRUD.save");
+        execute("Mode.list"); // To verify that deliveryDays is synchronized
+        assertValueInList(0, "deliveryDays", "2"); 
+
+        execute("List.viewDetail", "row=0");
+        setValue("date", "1/13/20");
+        assertValue("estimatedDeliveryDays", "7");
+        execute("CRUD.save");
+        execute("Mode.list"); // To verify that deliveryDays is synchronized
+        assertValueInList(0, "deliveryDays", "7");        
+    }
+    
 }
