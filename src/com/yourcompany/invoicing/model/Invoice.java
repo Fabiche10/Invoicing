@@ -1,59 +1,27 @@
 package com.yourcompany.invoicing.model;
  
-import java.time.*;
 import java.util.*;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 
-import org.hibernate.annotations.*;
 import org.openxava.annotations.*;
-import org.openxava.calculators.*;
-
-import com.yourcompany.invoicing.calculators.*;
 
 import lombok.*;
-
+ 
 @Entity @Getter @Setter
-@View(members= // This view has no name, so it will be the view used by default
-"year, number, date;" + // Comma separated means in the same line
-"customer;" + // Semicolon means a new line
-"details;" +
-"remarks"
+@View( extendsView="super.DEFAULT", // The default view
+members="orders { orders }"
 )
-public class Invoice {
-
-    @Id
-    @GeneratedValue(generator="system-uuid")
-    @Hidden
-    @GenericGenerator(name="system-uuid", strategy="uuid")
-    @Column(length=32)
-    String oid;
-
-    @Column(length=4)
-    @DefaultValueCalculator(CurrentYearCalculator.class) // Current year
-    int year;
+@View( name="NoCustomerNoOrders", // A view named NoCustomerNoOrders
+members=                      // that does not include customer and orders
+    "year, number, date;" +   // Ideal to be used from Order
+    "details;" +
+    "remarks"
+) 
+public class Invoice extends CommercialDocument {
  
-    @Column(length=6)
-    @DefaultValueCalculator(value=NextNumberForYearCalculator.class,
-        properties=@PropertyValue(name="year") // To inject the value of year from Invoice to
-                                               // the calculator before calling to calculate()
-    )
-    int number;
- 
-    @Required
-    @DefaultValueCalculator(CurrentLocalDateCalculator.class) // Current date
-    LocalDate date;
- 
-    @Stereotype("MEMO")
-    String remarks;
-    
-    @ManyToOne(fetch=FetchType.LAZY, optional=false)
-    @ReferenceView("Simple") // The view named 'Simple' is used to display this reference
-    Customer customer;
-    
-    @ElementCollection
-    @ListProperties("product.number, product.description, quantity")
-    Collection<Detail> details;
+	@OneToMany(mappedBy="invoice")
+    @CollectionView("NoCustomerNoInvoice") // This view is used to display orders
+    private Collection<Order> orders;
  
 }
