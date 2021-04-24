@@ -47,7 +47,7 @@ abstract public class CommercialDocumentTest extends ModuleTestBase {
     
     private void chooseCustomer() throws Exception {
         setValue("customer.number", "1");
-        assertValue("customer.name", "JAVIER PANIZA"); // The customer 1 should exist in DB
+		assertValue("customer.name", "JAVIER PANIZA"); // The customer 1 should exist in DB
     }
  
     private void addDetails() throws Exception {
@@ -69,7 +69,7 @@ abstract public class CommercialDocumentTest extends ModuleTestBase {
      
         // Verifying total properties of collection
         assertTotalInCollection("details", 0, "amount", "38.00"); // Sum of amounts using +
-        assertTotalInCollection("details", 1, "amount", "21"); // Default value from properties file
+        assertTotalInCollection("details", 1, "amount", "21.00"); // Default value from properties file
         assertTotalInCollection("details", 2, "amount", "7.98"); // VAT, with @Calculation
         assertTotalInCollection("details", 3, "amount", "45.98"); // Total amount, with @Calculation
      
@@ -85,7 +85,7 @@ abstract public class CommercialDocumentTest extends ModuleTestBase {
      
         // Verifying total properties of collection
         assertTotalInCollection("details", 0, "amount", "48.00");
-        assertTotalInCollection("details", 1, "amount", "21");
+        assertTotalInCollection("details", 1, "amount", "21.00");
         assertTotalInCollection("details", 2, "amount", "10.08");
         assertTotalInCollection("details", 3, "amount", "58.08");
     }
